@@ -9,6 +9,7 @@ import { glmConfig } from '../../src/main/providers/builtin/glm.ts'
 import { kimiConfig } from '../../src/main/providers/builtin/kimi.ts'
 import { minimaxConfig } from '../../src/main/providers/builtin/minimax.ts'
 import { mimoConfig } from '../../src/main/providers/builtin/mimo.ts'
+import { qwenConfig } from '../../src/main/providers/builtin/qwen.ts'
 import {
   DEEPSEEK_PRIMARY_MODELS,
   DEFAULT_DEEPSEEK_MODEL_MAPPINGS,
@@ -242,6 +243,41 @@ test('Kimi and domestic Qwen support account-level chat cleanup', () => {
   assert.match(qwenAdapterSource, /api\/v2\/file\/record\/delete/)
   assert.match(qwenAdapterSource, /session_ids/)
   assert.match(qwenAdapterSource, /sessionIds/)
+})
+
+test('domestic Qwen models match the web chat model ids captured from HAR', () => {
+  const expectedModels = [
+    'Qwen3.6',
+    'Qwen3.7-Max',
+    'Qwen3.5-Flash',
+    'Qwen3-Max',
+    'Qwen3-Max-Thinking-Preview',
+    'Qwen3-Coder',
+  ]
+  const expectedMappings = {
+    'Qwen3.6': 'Qwen',
+    'Qwen3.7-Max': 'Qwen3.7-Max',
+    'Qwen3.5-Flash': 'Qwen3.5-Flash',
+    'Qwen3-Max': 'Qwen3-Max',
+    'Qwen3-Max-Thinking-Preview': 'Qwen3-Max-Thinking-Preview',
+    'Qwen3-Coder': 'Qwen3-Coder',
+  }
+
+  assert.deepEqual(qwenConfig.supportedModels, expectedModels)
+  assert.deepEqual(qwenConfig.modelMappings, expectedMappings)
+
+  const qwenAdapterSource = readFileSync(join(root, 'src/main/proxy/adapters/qwen.ts'), 'utf8')
+  const addProviderSource = readFileSync(join(root, 'src/renderer/src/components/providers/AddProviderDialog.tsx'), 'utf8')
+  const zh = JSON.parse(readFileSync(join(root, 'src/renderer/src/i18n/locales/zh-CN.json'), 'utf8'))
+  const en = JSON.parse(readFileSync(join(root, 'src/renderer/src/i18n/locales/en-US.json'), 'utf8'))
+
+  assert.match(qwenAdapterSource, /'Qwen3\.6': 'Qwen'/)
+  assert.match(qwenAdapterSource, /'Qwen3-Coder': 'Qwen3-Coder'/)
+  assert.doesNotMatch(qwenAdapterSource, /qwen3-coder-plus|tongyi-qwen3-max-model-agent|tongyi-qwen-plus-agent/)
+  assert.match(addProviderSource, /supportedModels: \['Qwen3\.6', 'Qwen3\.7-Max', 'Qwen3\.5-Flash', 'Qwen3-Max', 'Qwen3-Max-Thinking-Preview', 'Qwen3-Coder'\]/)
+  assert.match(addProviderSource, /'Qwen3\.6': 'Qwen'/)
+  assert.deepEqual(zh.qwen.models, expectedMappings)
+  assert.deepEqual(en.qwen.models, expectedMappings)
 })
 
 test('Mimo model names and conversation flow match Xiaomi AI Studio web requests', () => {

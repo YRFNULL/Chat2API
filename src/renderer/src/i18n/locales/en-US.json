@@ -293,11 +293,12 @@
     "codeMode": "Code Mode",
     "codeModeDesc": "Use Qwen-Coder model, specialized for programming tasks",
     "models": {
-      "qwen3-235b-a22b": "Qwen3-235B-A22B (Deep Thinking)",
-      "qwen3-coder-plus": "Qwen3-Coder (Code Mode)",
-      "qwen3-30b-a3b": "Qwen3-30B-A3B",
-      "qwen-max-latest": "Qwen2.5-Max",
-      "Qwen3.5-Plus": "Qwen3.5-Plus"
+      "Qwen3.6": "Qwen",
+      "Qwen3.7-Max": "Qwen3.7-Max",
+      "Qwen3.5-Flash": "Qwen3.5-Flash",
+      "Qwen3-Max": "Qwen3-Max",
+      "Qwen3-Max-Thinking-Preview": "Qwen3-Max-Thinking-Preview",
+      "Qwen3-Coder": "Qwen3-Coder"
     }
   },
   "qwen-ai": {

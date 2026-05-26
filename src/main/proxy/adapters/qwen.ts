@@ -30,13 +30,12 @@ const QWEN_CHAT2_API_BASE = 'https://chat2-api.qianwen.com'
 const QWEN_CHAT_SIDE_API_BASE = 'https://chat-side.qianwen.com'
 
 const MODEL_MAP: Record<string, string> = {
-  'Qwen3': 'tongyi-qwen3-max-model-agent',
-  'Qwen3-Max': 'tongyi-qwen3-max-model-agent',
-  'Qwen3-Max-Thinking': 'tongyi-qwen3-max-thinking-agent',
-  'Qwen3-Plus': 'tongyi-qwen-plus-agent',
-  'Qwen3.5-Plus': 'Qwen3.5-Plus',
-  'Qwen3-Flash': 'qwen3-flash',
-  'Qwen3-Coder': 'qwen3-coder-plus',
+  'Qwen3.6': 'Qwen',
+  'Qwen3.7-Max': 'Qwen3.7-Max',
+  'Qwen3.5-Flash': 'Qwen3.5-Flash',
+  'Qwen3-Max': 'Qwen3-Max',
+  'Qwen3-Max-Thinking-Preview': 'Qwen3-Max-Thinking-Preview',
+  'Qwen3-Coder': 'Qwen3-Coder',
 }
 
 const DEFAULT_HEADERS = {
@@ -325,8 +324,8 @@ export class QwenAdapter {
     // Map thinking mode to model
     if (enableThinking) {
       // Use thinking model if available
-      if (actualModel === 'tongyi-qwen3-max-model-agent') {
-        actualModel = 'tongyi-qwen3-max-thinking-agent'
+      if (actualModel === 'Qwen3-Max') {
+        actualModel = 'Qwen3-Max-Thinking-Preview'
         console.log('[Qwen] Using thinking model:', actualModel)
       }
     }

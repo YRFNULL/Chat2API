@@ -89,6 +89,7 @@ export async function registerIpcHandlers(mainWindow: BrowserWindow | null): Pro
         const status: ProxyStatus = {
           isRunning: true,
           port: proxyPort,
+          host: proxyHost,
           uptime: 0,
           connections: 0,
         }
@@ -122,6 +123,7 @@ export async function registerIpcHandlers(mainWindow: BrowserWindow | null): Pro
         const status: ProxyStatus = {
           isRunning: true,
           port: proxyPort,
+          host: proxyHost,
           uptime: 0,
           connections: 0,
         }
@@ -151,6 +153,7 @@ export async function registerIpcHandlers(mainWindow: BrowserWindow | null): Pro
         const status: ProxyStatus = {
           isRunning: false,
           port: proxyStatusManager.getPort(),
+          host: storeManager.getConfig().proxyHost || proxyStatusManager.getHost(),
           uptime: proxyStartTime ? Date.now() - proxyStartTime : 0,
           connections: 0,
         }
@@ -170,9 +173,13 @@ export async function registerIpcHandlers(mainWindow: BrowserWindow | null): Pro
   ipcMain.handle(IpcChannels.PROXY_GET_STATUS, async (): Promise<ProxyStatus> => {
     const isRunning = proxyServer !== null
     const port = proxyStatusManager.getPort()
+    const host = isRunning
+      ? proxyStatusManager.getHost()
+      : storeManager.getConfig().proxyHost || proxyStatusManager.getHost()
     return {
       isRunning,
       port,
+      host,
       uptime: proxyStartTime && isRunning ? Date.now() - proxyStartTime : 0,
       connections: proxyStatusManager.getStatistics().activeConnections,
     }
@@ -228,6 +235,13 @@ export async function registerIpcHandlers(mainWindow: BrowserWindow | null): Pro
     }
     const store = storeManager.getStore()
     store?.set(key as 'providers' | 'accounts' | 'config' | 'logs', value as never)
+    if (key === 'config') {
+      BrowserWindow.getAllWindows().forEach((win) => {
+        if (!win.isDestroyed()) {
+          win.webContents.send(IpcChannels.CONFIG_CHANGED, value)
+        }
+      })
+    }
   })
 
   ipcMain.handle(IpcChannels.STORE_DELETE, async (_, key: string): Promise<void> => {
@@ -1001,9 +1015,13 @@ export async function registerIpcHandlers(mainWindow: BrowserWindow | null): Pro
 export function getProxyStatus(): ProxyStatus {
   const isRunning = proxyServer !== null
   const port = proxyStatusManager.getPort()
+  const host = isRunning
+    ? proxyStatusManager.getHost()
+    : storeManager.getConfig().proxyHost || proxyStatusManager.getHost()
   return {
     isRunning,
     port,
+    host,
     uptime: proxyStartTime && isRunning ? Date.now() - proxyStartTime : 0,
     connections: proxyStatusManager.getStatistics().activeConnections,
   }

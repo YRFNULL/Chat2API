@@ -293,11 +293,12 @@
     "codeMode": "代码模式",
     "codeModeDesc": "使用 Qwen-Coder 模型，专注于编程任务",
     "models": {
-      "qwen3-235b-a22b": "Qwen3-235B-A22B (深度思考)",
-      "qwen3-coder-plus": "Qwen3-Coder (代码模式)",
-      "qwen3-30b-a3b": "Qwen3-30B-A3B",
-      "qwen-max-latest": "Qwen2.5-Max",
-      "Qwen3.5-Plus": "Qwen3.5-Plus"
+      "Qwen3.6": "Qwen",
+      "Qwen3.7-Max": "Qwen3.7-Max",
+      "Qwen3.5-Flash": "Qwen3.5-Flash",
+      "Qwen3-Max": "Qwen3-Max",
+      "Qwen3-Max-Thinking-Preview": "Qwen3-Max-Thinking-Preview",
+      "Qwen3-Coder": "Qwen3-Coder"
     }
   },
   "qwen-ai": {
